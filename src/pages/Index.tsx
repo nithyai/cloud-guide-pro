@@ -6,7 +6,10 @@ import { WeatherSearch } from "@/components/WeatherSearch";
 import { CurrentWeather } from "@/components/CurrentWeather";
 import { WeeklyForecast } from "@/components/WeeklyForecast";
 import { HourlyForecast } from "@/components/HourlyForecast";
-import { getCurrentWeather, getCurrentWeatherByCoords, getForecast } from "@/lib/weatherApi";
+import { WeatherDetails } from "@/components/WeatherDetails";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { FavoriteLocations } from "@/components/FavoriteLocations";
+import { getCurrentWeather, getCurrentWeatherByCoords, getForecast, getUVIndex } from "@/lib/weatherApi";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
@@ -29,6 +32,13 @@ const Index = () => {
     queryKey: ["forecast", city],
     queryFn: () => getForecast(city),
     enabled: !!city && !coords,
+    retry: 1,
+  });
+
+  const { data: uvData } = useQuery({
+    queryKey: ["uv", coords],
+    queryFn: () => coords ? getUVIndex(coords.lat, coords.lon) : null,
+    enabled: !!coords,
     retry: 1,
   });
 
@@ -84,6 +94,10 @@ const Index = () => {
   return (
     <div className={`min-h-screen ${getBackgroundClass()} transition-all duration-1000`}>
       <div className="container mx-auto px-4 py-8">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+        
         <header className="mb-8 text-center animate-fade-in">
           <h1 className="text-5xl font-bold text-foreground mb-2">Weather Forecast</h1>
           <p className="text-muted-foreground">Real-time weather data and forecasts</p>
@@ -109,7 +123,18 @@ const Index = () => {
 
         {weatherData && (
           <div className="max-w-4xl mx-auto space-y-6">
+            <FavoriteLocations currentCity={weatherData.city} onSelectCity={handleSearch} />
             <CurrentWeather data={weatherData} />
+            <WeatherDetails
+              humidity={weatherData.humidity}
+              windSpeed={weatherData.windSpeed}
+              windDeg={weatherData.windDeg}
+              pressure={weatherData.pressure}
+              visibility={weatherData.visibility}
+              sunrise={weatherData.sunrise}
+              sunset={weatherData.sunset}
+              uvIndex={uvData}
+            />
             
             {forecastData && (
               <>

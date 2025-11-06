@@ -10,6 +10,11 @@ interface CurrentWeatherProps {
     condition: string;
     humidity: number;
     windSpeed: number;
+    windDeg: number;
+    sunrise: number;
+    sunset: number;
+    pressure: number;
+    visibility: number;
     icon: string;
   };
 }
@@ -25,40 +30,23 @@ const getWeatherIcon = (condition: string) => {
 export const CurrentWeather = ({ data }: CurrentWeatherProps) => {
   return (
     <Card className="p-8 bg-card/50 backdrop-blur-sm border-border/50 shadow-[var(--shadow-soft)] animate-fade-in">
-      <div className="flex flex-col items-center text-center space-y-4">
-        <div>
-          <h2 className="text-3xl font-bold text-foreground">
+      <div className="flex flex-col items-center gap-6">
+        <div className="flex-1 text-center w-full">
+          <h2 className="text-3xl font-bold mb-1 text-foreground">
             {data.city}, {data.country}
           </h2>
-          <p className="text-muted-foreground">{data.condition}</p>
-        </div>
-        
-        <div className="text-primary">
-          {getWeatherIcon(data.condition)}
-        </div>
-        
-        <div>
-          <div className="text-7xl font-bold text-foreground">
-            {Math.round(data.temp)}°
-          </div>
-          <p className="text-muted-foreground mt-2">
-            Feels like {Math.round(data.feelsLike)}°
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-8 pt-4 w-full max-w-xs">
-          <div className="flex items-center gap-2">
-            <Droplets className="h-5 w-5 text-primary" />
-            <div>
-              <p className="text-sm text-muted-foreground">Humidity</p>
-              <p className="text-lg font-semibold text-foreground">{data.humidity}%</p>
+          <p className="text-xl text-muted-foreground mb-4">{data.condition}</p>
+          <div className="flex items-center justify-center gap-4">
+            <div className="text-primary">
+              {getWeatherIcon(data.condition)}
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Wind className="h-5 w-5 text-primary" />
             <div>
-              <p className="text-sm text-muted-foreground">Wind</p>
-              <p className="text-lg font-semibold text-foreground">{data.windSpeed} m/s</p>
+              <div className="text-6xl font-bold text-foreground">
+                {Math.round(data.temp)}°
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">
+                Feels like {Math.round(data.feelsLike)}°
+              </p>
             </div>
           </div>
         </div>

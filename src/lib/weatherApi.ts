@@ -12,6 +12,11 @@ export interface WeatherData {
   condition: string;
   humidity: number;
   windSpeed: number;
+  windDeg: number;
+  sunrise: number;
+  sunset: number;
+  pressure: number;
+  visibility: number;
   icon: string;
 }
 
@@ -50,6 +55,11 @@ export const getCurrentWeather = async (city: string): Promise<WeatherData> => {
       condition: data.weather[0].main,
       humidity: data.main.humidity,
       windSpeed: data.wind.speed,
+      windDeg: data.wind.deg || 0,
+      sunrise: data.sys.sunrise,
+      sunset: data.sys.sunset,
+      pressure: data.main.pressure,
+      visibility: data.visibility,
       icon: data.weather[0].icon,
     };
   } catch (error) {
@@ -80,10 +90,32 @@ export const getCurrentWeatherByCoords = async (
       condition: data.weather[0].main,
       humidity: data.main.humidity,
       windSpeed: data.wind.speed,
+      windDeg: data.wind.deg || 0,
+      sunrise: data.sys.sunrise,
+      sunset: data.sys.sunset,
+      pressure: data.main.pressure,
+      visibility: data.visibility,
       icon: data.weather[0].icon,
     };
   } catch (error) {
     throw new Error("Failed to fetch weather data");
+  }
+};
+
+export const getUVIndex = async (lat: number, lon: number): Promise<number | null> => {
+  try {
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${API_KEY}`
+    );
+    
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data.value;
+  } catch (error) {
+    return null;
   }
 };
 
