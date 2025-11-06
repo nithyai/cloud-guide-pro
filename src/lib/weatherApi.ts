@@ -1,7 +1,7 @@
 // OpenWeatherMap API integration
 // Get your free API key at: https://openweathermap.org/api
 
-const API_KEY = "YOUR_API_KEY_HERE"; // Users should replace this with their own key
+const API_KEY = "b381ad49f26f2c7d6a7902d068218fd4";
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
 
 export interface WeatherData {
