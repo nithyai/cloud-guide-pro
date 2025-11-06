@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { MapPin, AlertCircle } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { WeatherSearch } from "@/components/WeatherSearch";
 import { CurrentWeather } from "@/components/CurrentWeather";
 import { WeeklyForecast } from "@/components/WeeklyForecast";
@@ -101,22 +100,6 @@ const Index = () => {
             Use My Location
           </Button>
         </div>
-
-        <Alert className="mb-8 max-w-2xl mx-auto bg-accent/10 border-accent/30">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            To use this app, you need an OpenWeatherMap API key. Get one free at{" "}
-            <a
-              href="https://openweathermap.org/api"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline font-semibold"
-            >
-              openweathermap.org
-            </a>{" "}
-            and add it to src/lib/weatherApi.ts
-          </AlertDescription>
-        </Alert>
 
         {weatherLoading && (
           <div className="text-center text-foreground">
