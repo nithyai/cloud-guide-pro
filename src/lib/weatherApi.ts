@@ -35,6 +35,12 @@ export interface HourlyData {
   icon: string;
 }
 
+export interface PrecipitationData {
+  time: string;
+  probability: number;
+  intensity: number;
+}
+
 export interface WeatherAlert {
   event: string;
   start: number;
@@ -145,6 +151,7 @@ export const getUVIndex = async (lat: number, lon: number): Promise<number | nul
 export const getForecast = async (city: string): Promise<{
   weekly: ForecastDay[];
   hourly: HourlyData[];
+  precipitation: PrecipitationData[];
 }> => {
   try {
     const response = await fetch(
@@ -192,7 +199,17 @@ export const getForecast = async (city: string): Promise<{
       icon: item.weather[0].icon,
     }));
 
-    return { weekly, hourly };
+    // Process precipitation data (next 24 hours)
+    const precipitation = data.list.slice(0, 8).map((item: any) => ({
+      time: new Date(item.dt * 1000).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        hour12: true,
+      }),
+      probability: Math.round((item.pop || 0) * 100),
+      intensity: item.rain ? (item.rain["3h"] || 0) : 0,
+    }));
+
+    return { weekly, hourly, precipitation };
   } catch (error) {
     throw new Error("Failed to fetch forecast data");
   }

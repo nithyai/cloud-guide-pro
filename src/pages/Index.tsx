@@ -12,6 +12,7 @@ import { FavoriteLocations } from "@/components/FavoriteLocations";
 import { WeatherAnimation } from "@/components/WeatherAnimation";
 import { WeatherAlerts } from "@/components/WeatherAlerts";
 import { AirQuality } from "@/components/AirQuality";
+import { PrecipitationChart } from "@/components/PrecipitationChart";
 import { getCurrentWeather, getCurrentWeatherByCoords, getForecast, getUVIndex, getWeatherAlerts, getAirQuality } from "@/lib/weatherApi";
 import { useToast } from "@/hooks/use-toast";
 
@@ -158,6 +159,7 @@ const Index = () => {
             
             {forecastData && (
               <>
+                <PrecipitationChart data={forecastData.precipitation} />
                 <HourlyForecast hours={forecastData.hourly} />
                 <WeeklyForecast forecast={forecastData.weekly} />
               </>
