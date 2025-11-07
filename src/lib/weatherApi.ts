@@ -44,6 +44,20 @@ export interface WeatherAlert {
   sender_name: string;
 }
 
+export interface AirQualityData {
+  aqi: number;
+  components: {
+    co: number;
+    no: number;
+    no2: number;
+    o3: number;
+    so2: number;
+    pm2_5: number;
+    pm10: number;
+    nh3: number;
+  };
+}
+
 export const getCurrentWeather = async (city: string): Promise<WeatherData> => {
   try {
     const response = await fetch(
@@ -215,6 +229,45 @@ export const getWeatherAlerts = async (
     return null;
   } catch (error) {
     console.error("Failed to fetch weather alerts:", error);
+    return null;
+  }
+};
+
+export const getAirQuality = async (
+  lat: number,
+  lon: number
+): Promise<AirQualityData | null> => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`
+    );
+    
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    
+    if (data.list && data.list.length > 0) {
+      const airData = data.list[0];
+      return {
+        aqi: airData.main.aqi,
+        components: {
+          co: airData.components.co,
+          no: airData.components.no,
+          no2: airData.components.no2,
+          o3: airData.components.o3,
+          so2: airData.components.so2,
+          pm2_5: airData.components.pm2_5,
+          pm10: airData.components.pm10,
+          nh3: airData.components.nh3,
+        },
+      };
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Failed to fetch air quality data:", error);
     return null;
   }
 };

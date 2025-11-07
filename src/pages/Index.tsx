@@ -11,7 +11,8 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { FavoriteLocations } from "@/components/FavoriteLocations";
 import { WeatherAnimation } from "@/components/WeatherAnimation";
 import { WeatherAlerts } from "@/components/WeatherAlerts";
-import { getCurrentWeather, getCurrentWeatherByCoords, getForecast, getUVIndex, getWeatherAlerts } from "@/lib/weatherApi";
+import { AirQuality } from "@/components/AirQuality";
+import { getCurrentWeather, getCurrentWeatherByCoords, getForecast, getUVIndex, getWeatherAlerts, getAirQuality } from "@/lib/weatherApi";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
@@ -47,6 +48,13 @@ const Index = () => {
   const { data: alertsData } = useQuery({
     queryKey: ["alerts", coords],
     queryFn: () => coords ? getWeatherAlerts(coords.lat, coords.lon) : null,
+    enabled: !!coords,
+    retry: 1,
+  });
+
+  const { data: airQualityData } = useQuery({
+    queryKey: ["airQuality", coords],
+    queryFn: () => coords ? getAirQuality(coords.lat, coords.lon) : null,
     enabled: !!coords,
     retry: 1,
   });
@@ -135,6 +143,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto space-y-6">
             <FavoriteLocations currentCity={weatherData.city} onSelectCity={handleSearch} />
             <WeatherAlerts alerts={alertsData} />
+            <AirQuality data={airQualityData} />
             <CurrentWeather data={weatherData} />
             <WeatherDetails
               humidity={weatherData.humidity}
