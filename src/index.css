@@ -137,3 +137,76 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /* Rain Animation */
+  .rain-drop {
+    @apply absolute w-0.5 h-12 opacity-40;
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.6), transparent);
+    animation: rain-fall linear infinite;
+  }
+  
+  @keyframes rain-fall {
+    0% {
+      transform: translateY(-100px);
+    }
+    100% {
+      transform: translateY(100vh);
+    }
+  }
+  
+  /* Snow Animation */
+  .snow-flake {
+    @apply absolute w-2 h-2 bg-background rounded-full;
+    animation: snow-fall linear infinite;
+  }
+  
+  @keyframes snow-fall {
+    0% {
+      transform: translateY(-10px) translateX(0);
+    }
+    50% {
+      transform: translateY(50vh) translateX(20px);
+    }
+    100% {
+      transform: translateY(100vh) translateX(0);
+    }
+  }
+  
+  /* Cloud Animation */
+  .cloud {
+    @apply absolute w-32 h-16 opacity-30;
+    background: hsl(var(--foreground) / 0.2);
+    border-radius: 100px;
+    animation: cloud-move linear infinite;
+  }
+  
+  .cloud::before,
+  .cloud::after {
+    content: '';
+    @apply absolute bg-inherit rounded-full;
+  }
+  
+  .cloud::before {
+    width: 50px;
+    height: 50px;
+    top: -25px;
+    left: 10px;
+  }
+  
+  .cloud::after {
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    right: 10px;
+  }
+  
+  @keyframes cloud-move {
+    0% {
+      transform: translateX(-200px);
+    }
+    100% {
+      transform: translateX(calc(100vw + 200px));
+    }
+  }
+}

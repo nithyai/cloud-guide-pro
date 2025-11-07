@@ -9,6 +9,7 @@ import { HourlyForecast } from "@/components/HourlyForecast";
 import { WeatherDetails } from "@/components/WeatherDetails";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { FavoriteLocations } from "@/components/FavoriteLocations";
+import { WeatherAnimation } from "@/components/WeatherAnimation";
 import { getCurrentWeather, getCurrentWeatherByCoords, getForecast, getUVIndex } from "@/lib/weatherApi";
 import { useToast } from "@/hooks/use-toast";
 
@@ -92,8 +93,9 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen ${getBackgroundClass()} transition-all duration-1000`}>
-      <div className="container mx-auto px-4 py-8">
+    <div className={`min-h-screen ${getBackgroundClass()} transition-all duration-1000 relative overflow-hidden`}>
+      {weatherData && <WeatherAnimation condition={weatherData.condition} />}
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="absolute top-4 right-4">
           <ThemeToggle />
         </div>
