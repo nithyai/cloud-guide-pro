@@ -35,6 +35,15 @@ export interface HourlyData {
   icon: string;
 }
 
+export interface WeatherAlert {
+  event: string;
+  start: number;
+  end: number;
+  description: string;
+  severity: "extreme" | "severe" | "moderate" | "minor";
+  sender_name: string;
+}
+
 export const getCurrentWeather = async (city: string): Promise<WeatherData> => {
   try {
     const response = await fetch(
@@ -172,5 +181,40 @@ export const getForecast = async (city: string): Promise<{
     return { weekly, hourly };
   } catch (error) {
     throw new Error("Failed to fetch forecast data");
+  }
+};
+
+export const getWeatherAlerts = async (
+  lat: number,
+  lon: number
+): Promise<WeatherAlert[] | null> => {
+  try {
+    // Using One Call API 3.0 which includes alerts
+    const response = await fetch(
+      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,daily&appid=${API_KEY}`
+    );
+    
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    
+    // Return alerts if available, otherwise null
+    if (data.alerts && data.alerts.length > 0) {
+      return data.alerts.map((alert: any) => ({
+        event: alert.event,
+        start: alert.start,
+        end: alert.end,
+        description: alert.description,
+        severity: alert.tags && alert.tags.length > 0 ? alert.tags[0] : "moderate",
+        sender_name: alert.sender_name,
+      }));
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Failed to fetch weather alerts:", error);
+    return null;
   }
 };
